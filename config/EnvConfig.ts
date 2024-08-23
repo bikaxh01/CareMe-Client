@@ -1,0 +1,1 @@
+export const userBaseUrl = process.env.BASE_URL;

@@ -1,8 +1,13 @@
+
 import React from 'react'
+import SignIn from '@/components/AppComponents/Form/SignInForm'
 
 function Page() {
   return (
-    <div>User page</div>
+    <div>
+    <SignIn/>
+      
+    </div>
   )
 }
 
