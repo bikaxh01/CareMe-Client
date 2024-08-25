@@ -49,6 +49,8 @@ export function SignUpForm({ sendData }: any) {
   const [UploadedDocumentURL, setUploadedDocumentURL] = useState("");
 
   function onSubmit(data: z.infer<typeof SignUpFormSchema>) {
+    console.log("🚀 ~ onSubmit ~ data:", data)
+    
     if (!data) {
       toast({
         title: "Invalid Form Data",
@@ -71,7 +73,6 @@ export function SignUpForm({ sendData }: any) {
     const finalData = {
       ...data,
       documentUrl: UploadedDocumentURL,
-      phone: parseInt(data.phone),
     };
 
     sendData(finalData);
