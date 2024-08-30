@@ -11,7 +11,7 @@ import VerificationForm from "@/components/AppComponents/Form/verificationForm";
 function SignUp() {
   const [formData, setFormData] = useState<any>();
   const [signUpCompleted, setSignUpCompleted] = useState(false);
-
+  const [userEmail, setUserEmail] = useState('');
   const { toast } = useToast();
   const handleSubmit = (data: z.infer<typeof SignUpFormSchema>) => {
     submitForm(data);
@@ -27,6 +27,7 @@ function SignUp() {
           `${APIBaseUrl}/user//auth/register-user`,
           data
         );
+        setUserEmail(response.data.data.email)
         toast({
           title: `${response.data.message}`,
           variant: "default",
@@ -49,7 +50,10 @@ function SignUp() {
 
   return (
     <div>
-      <SignUpForm sendData={handleSubmit} />
+      {
+        signUpCompleted ? <VerificationForm email={userEmail} isUserCreated={signUpCompleted}/> :<SignUpForm sendData={handleSubmit} />
+      }
+      
     </div>
   );
 }

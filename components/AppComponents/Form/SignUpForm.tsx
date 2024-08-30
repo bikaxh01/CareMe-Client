@@ -19,6 +19,8 @@ import { useState } from "react";
 import DropZone from "@/components/AppComponents/dropZone";
 import { ModeToggle } from "@/components/AppComponents/ThemeToggler";
 import { useToast } from "@/components/ui/use-toast";
+import VerificationForm from "./verificationForm";
+import Email from "next-auth/providers/email";
 
 export function SignUpForm({ sendData }: any) {
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
@@ -30,6 +32,7 @@ const [isOpen, setIsOpen] = useState(false);
 const [selectedCountry, setSelectedCountry] = useState("");
 const [selectedState, setSelectedState] = useState("");
 const [UploadedDocumentURL, setUploadedDocumentURL] = useState("");
+
 
 const [step, setStep] = useState(1);
 
@@ -463,6 +466,7 @@ return (
                 Submit
               </button>
             )}
+            
           </div>
 
         </form>
