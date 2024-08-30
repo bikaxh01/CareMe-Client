@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Form,
@@ -15,15 +15,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { SignInFormSchema } from "@/config/zodModels";
-
-function SignIn() {
-
+import { signIn } from "next-auth/react";
+function SignInComponent() {
   const form = useForm<z.infer<typeof SignInFormSchema>>({
     resolver: zodResolver(SignInFormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof SignInFormSchema>) {
+  async function onSubmit(data: z.infer<typeof SignInFormSchema>) {
     console.log(data);
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      type:'user',
+      email: data.email,
+      password: data.password,
+    });
+
+    if (res?.error) {
+      console.error("Error:", res.error);
+    } else {
+      console.log(res);
+      console.log("Signed in successfully");
+    }
+
     console.log("Form submitted");
   }
   return (
@@ -32,8 +46,8 @@ function SignIn() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="max-w-lg mx-auto space-y-6 p-8  rounded-lg shadow-lg"
       >
-        <div> 
-            <h1 className=" text-2xl">CareMe</h1>
+        <div>
+          <h1 className=" text-2xl">CareMe</h1>
         </div>
         <FormField
           control={form.control}
@@ -84,4 +98,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignInComponent;

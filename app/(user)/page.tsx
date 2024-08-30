@@ -1,11 +1,11 @@
 
 import React from 'react'
-import SignIn from '@/components/AppComponents/Form/SignInForm'
+import SignInComponent from '@/components/AppComponents/Form/SignInForm'
 
 function Page() {
   return (
     <div>
-    <SignIn/>
+    <SignInComponent/>
       
     </div>
   )

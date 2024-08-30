@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { userBaseUrl } from "@/config/EnvConfig";
+import { APIBaseUrl } from "@/config/EnvConfig";
 import * as Progress from "@radix-ui/react-progress";
 import { UploadIcon } from "lucide-react";
 
@@ -31,7 +31,7 @@ function DropZone({ sendDocumentURL }: any) {
     setUploadProgress(0);
     try {
       const response = await axios.post(
-        `${userBaseUrl}/user/upload-document`,
+        `${APIBaseUrl}/user/upload-document`,
         fileData,
         {
           headers: {

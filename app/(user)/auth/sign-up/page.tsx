@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { SignUpForm } from "@/components/AppComponents/Form/SignUpForm";
 import { SignUpFormSchema } from "@/config/zodModels";
 import { z } from "zod";
-import { userBaseUrl } from "@/config/EnvConfig";
+import { APIBaseUrl } from "@/config/EnvConfig";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import VerificationForm from "@/components/AppComponents/Form/verificationForm";
@@ -24,7 +24,7 @@ function SignUp() {
 
       try {
         const response = await axios.post(
-          `${userBaseUrl}/user//auth/register-user`,
+          `${APIBaseUrl}/user//auth/register-user`,
           data
         );
         toast({
