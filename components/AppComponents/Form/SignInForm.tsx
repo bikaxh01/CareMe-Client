@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { SignInFormSchema } from "@/config/zodModels";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 function SignInComponent() {
   const form = useForm<z.infer<typeof SignInFormSchema>>({
     resolver: zodResolver(SignInFormSchema),
@@ -112,9 +113,13 @@ function SignInComponent() {
               Submit
             </button>
           </form>
+      <div>
+       Not registered ? <Link href='/auth/sign-up' className=" text-blue-600 underline">Click Here</Link>
+      </div>
         </Form>
       </div>
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-white to-blue-600 justify-around items-center hidden"></div>
+      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-white to-blue-600 justify-around items-center hidden">
+      </div>
     </div>
   );
 }
