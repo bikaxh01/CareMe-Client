@@ -24,58 +24,48 @@ function SignInComponent() {
     resolver: zodResolver(SignInFormSchema),
   });
   const { toast } = useToast();
-  const router = useRouter();
+  const router = useRouter()
+
   async function onSubmit(data: z.infer<typeof SignInFormSchema>) {
-    const res = await signIn("credentials", {
-      redirect: false,
-      type: "user",
-      email: data.email,
-      password: data.password,
-    });
+    // const res = await signIn("credentials", {
+    //   redirect: false,
+    //   type: "user",
+    //   email: data.email,
+    //   password: data.password
+    // });
+    // // console.log(res.email);
 
-    if (res?.error) {
-      toast({
-        title: "ERROR",
-        description: res.error,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Signed In successfully",
-      });
-      router.push("/dashboard");
-    }
+    // if (res?.error) {
+    //   toast({
+    //     title: "ERROR",
+    //     description:res.error,
+    //     variant: "destructive",
+    //   });
+      
+    // } else {
+    //   toast({
+    //     title: "Success",
+    //     description:"Signed In successfully"
+    //   });
+    //   router.push('/dashboard')
+    // }
 
-    console.log("form submit");
+    console.log(data);
   }
-
-const handleFormSubmit= ()=>{
-
-}
-
   return (
-    <div
-  className="flex  justify-center items-center min-h-screen bg-cover bg-center  bg-opacity-80"
-  style={{
-    backgroundImage: `url('https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm0yMjJiYXRjaDUta3VsLTA2LmpwZw.jpg')`,
-}}
->
-
-    <div className="flex justify-center items-center min-h-screen bg-cover bg-center ">
-      <div className="w-full max-w-lg  p-10 border-1 bg-white  space-y-36 rounded-lg shadow-md bg-opacity-80" >
-        <div className="text-center max-w-lg ">
-        <h1 className="font-bold text-start space-y">Care Me</h1>
+    <div className="h-screen md:flex">
+      <div className="md:w-1/2 bg-white p-10">
+        <h1 className="font-bold text-start">Company Name</h1>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className=" mt-8"
+            className="bg-white mt-32"
           >
-            <h1 className="text-gray-800 font-bold text-2xl mb-10">
-              Book Your Appointment Now
+            <h1 className="text-gray-800 font-bold text-2xl mb-1">
+              Hi there, ....
             </h1>
             <p className="text-sm font-normal text-gray-600 mb-7">
-            "Quality Care with a Personal Touch."
+              Get Started with Appointments.
             </p>
             <FormField
               control={form.control}
@@ -119,23 +109,19 @@ const handleFormSubmit= ()=>{
               />
             </>
             <button
-              type="submit" 
-              className="block bg-blue-600 mt-4 py-2 px-4 rounded-2xl text-white font-semibold mb-2"
+              type="submit"
+              className="block bg-green-600 mt-4 py-2 px-4 rounded-2xl text-white font-semibold mb-2"
             >
               Submit
             </button>
           </form>
-          <div>
-            Not registered ?{" "}
-            <Link href="/auth/sign-up" className=" text-blue-600 underline">
-              Click Here
-            </Link>
-          </div>
+      <div>
+       Not registered ? <Link href='/auth/sign-up' className=" text-blue-600 underline">Click Here</Link>
+      </div>
         </Form>
       </div>
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-white to-blue-600 justify-around items-center hidden"></div>
-    </div>
-    </div>
+      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-white to-blue-600 justify-around items-center hidden">
+      </div>
     </div>
   );
 }
