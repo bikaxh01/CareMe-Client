@@ -1,12 +1,14 @@
+import BookApointment from '@/components/AppComponents/Form/BookApointment'
 import React from 'react'
 
-function BookAppointment() {
+
+function Page() {
   return (
     <div>
-        
+        <BookApointment/>
         
     </div>
   )
 }
 
-export default BookAppointment
+export default Page
