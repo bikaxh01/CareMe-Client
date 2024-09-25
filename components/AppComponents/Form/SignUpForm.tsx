@@ -136,19 +136,27 @@ export function SignUpForm({ sendData }: any) {
   };
 
   return (
-    <div className="h-screen md:flex">
-      <div className="md:w-1/2 bg-white p-10">
-        <h1 className="font-bold text-start">Company Name</h1>
+    <div
+    className="  justify-center items-center  bg-cover bg-center  bg-opacity-80"
+    style={{
+      backgroundImage: `url('https://cdn.wallpapersafari.com/34/49/JaXtBD.jpg')`,
+  }}
+  >
+    
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-md p-8 border-2 space-y-25 bg-slate-50 rounded-lg shadow-md">
+        <div className="text-center  ">
+        <h1 className="text-4xl font-extrabold tracking-tight lg:text-4xl mb-6">Company hellow Name</h1>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="bg-white mt-32"
+            className=" mt-10"
           >
             <h1 className="text-gray-800 font-bold text-2xl mb-1">
               Hi there, ....
             </h1>
             <p className="text-sm font-normal text-gray-600 mb-7">
-              Get Started with Appointments.
+              Get Started with Appointments....
             </p>
             {step === 1 && (
               <>
@@ -419,7 +427,7 @@ export function SignUpForm({ sendData }: any) {
                   name="documentNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold text-gray-700">
+                      <FormLabel className="font-semibold   ">
                         Document Number
                       </FormLabel>
                       <FormControl>
@@ -516,6 +524,8 @@ export function SignUpForm({ sendData }: any) {
             </Link>
           </div>
         </Form>
+      </div>
+      </div>
       </div>
       <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-white to-blue-600 justify-around items-center hidden"></div>
     </div>
