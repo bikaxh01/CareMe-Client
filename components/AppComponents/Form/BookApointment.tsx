@@ -1,12 +1,17 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { BookAppointmentSchema } from "@/config/zodModels";
+import { useToast } from "@/components/ui/use-toast";
+
 import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 
@@ -33,10 +38,16 @@ import {
 } from "@/components/ui/popover";
 
 function BookApointment() {
-  const form = useForm();
-  const onSubmit = () => {};
+  const form = useForm<z.infer<typeof BookAppointmentSchema>>({
+    resolver: zodResolver(BookAppointmentSchema),
+  });
 
   const [date, setDate] = React.useState<Date>();
+
+
+  function onSubmit(data: any) {
+    console.log("🚀 ~ onSubmit ~ data:",data);
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -49,12 +60,10 @@ function BookApointment() {
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-4">
               <FormField
                 control={form.control}
-                name="gender"
+                name="specialist"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel >
-                      Select Specialist
-                    </FormLabel>
+                  <FormItem className="text-left">
+                    <FormLabel>Select Specialist</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -65,11 +74,15 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Docter">
+                        <SelectItem value="specialist">
                           Anesthesiologists
                         </SelectItem>
-                        <SelectItem value="Docter">Cardiologists</SelectItem>
-                        <SelectItem value="Docter">Dermatologists</SelectItem>
+                        <SelectItem value="specialist1">
+                          Cardiologists
+                        </SelectItem>
+                        <SelectItem value="specialist2">
+                          Dermatologists
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -79,12 +92,10 @@ function BookApointment() {
 
               <FormField
                 control={form.control}
-                name="gender"
+                name="selecDoctor"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel >
-                      Select Doctor
-                    </FormLabel>
+                  <FormItem className="text-left">
+                    <FormLabel>Select Doctor</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -95,11 +106,11 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Doctor">
+                        <SelectItem value="doctor">
                           Burminda Burkumar
                         </SelectItem>
-                        <SelectItem value="Doctor"> Ram lala </SelectItem>
-                        <SelectItem value="Doctor"> Shib guiggar </SelectItem>
+                        <SelectItem value="doctor2"> Ram lala </SelectItem>
+                        <SelectItem value="doctor3"> Shib guiggar </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -110,11 +121,13 @@ function BookApointment() {
               <div className="flex ">
                 <div className="mt-2">
                   <Popover>
-                    <FormLabel  style={{ marginBottom: "10px", display: "block" }}>
+                    <FormLabel
+                      style={{ marginBottom: "10px", display: "block" }}
+                    >
                       Select Date for Checkup
                     </FormLabel>
 
-                    <PopoverTrigger asChild>  
+                    <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
@@ -139,12 +152,10 @@ function BookApointment() {
                 </div>
                 <FormField
                   control={form.control}
-                  name="gender"
+                  name="time"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel >
-                        Select Time
-                      </FormLabel>
+                      <FormLabel>Select Time</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -156,8 +167,8 @@ function BookApointment() {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="Time"> Moring</SelectItem>
-                          <SelectItem value="Time"> Night </SelectItem>
-                          <SelectItem value="Time">Evening</SelectItem>
+                          <SelectItem value="Time1"> Night </SelectItem>
+                          <SelectItem value="Time2">Evening</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -166,33 +177,33 @@ function BookApointment() {
                 />
               </div>
 
-              <div >
-                <div  >
-                <label htmlFor="story" style={{ marginBottom: "10px", display: "block" }} >Description: </label>
+              <div>
+                <div>
+                  <label
+                    className="text-left"
+                    htmlFor="story"
+                    style={{ marginBottom: "10px", display: "block" }}
+                  >
+                    Description:{" "}
+                  </label>
                 </div>
-                
-            
+
                 <textarea
-               
-                style={{
-                  borderColor: 'dark', 
-                  borderWidth: 1,
-                  borderStyle: 'solid',
-                  borderRadius: 4,
-                  padding: 10,
-                  backgroundColor: 'blue-',
-                }}
-                
+                  style={{
+                    borderColor: "dark",
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    borderRadius: 4,
+                    padding: 10,
+                    backgroundColor: "blue-",
+                  }}
                   id="story"
                   name="story"
                   placeholder="write here ..."
                   rows={5}
                   cols={33}
-                >
-                   
-                </textarea>
-               
-                </div>
+                ></textarea>
+              </div>
 
               <div className="flex justify-between">
                 <button
