@@ -56,6 +56,7 @@ export function SignUpForm({ sendData }: any) {
 
   const validateStep = async (step: number) => {
     let result = false;
+    
 
     switch (step) {
       case 1:
@@ -86,10 +87,11 @@ export function SignUpForm({ sendData }: any) {
     if (isValid) {
       setStep(step + 1);
     } else {
-      toast({
-        title: "Please correct the errors before proceeding",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Please correct the errors before proceeding",
+      //   // variant: "destructive",
+      // });
+      
     }
   };
 
@@ -139,52 +141,46 @@ export function SignUpForm({ sendData }: any) {
     <div
     className="  justify-center items-center  bg-cover bg-center  bg-opacity-80"
     style={{
-      backgroundImage: `url('https://cdn.wallpapersafari.com/34/49/JaXtBD.jpg')`,
+      backgroundImage: `url('https://t3.ftcdn.net/jpg/03/09/78/04/360_F_309780437_bztYRNRTMDZYw3tYMSvxY3taQcE7mJqE.jpg')`,
   }}
   >
     
     <div className="flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-md p-8 border-2 space-y-25 bg-slate-50 rounded-lg shadow-md">
-        <div className="text-center  ">
-        <h1 className="text-4xl font-extrabold tracking-tight lg:text-4xl mb-6">Company hellow Name</h1>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className=" mt-10"
-          >
-            <h1 className="text-gray-800 font-bold text-2xl mb-1">
-              Hi there, ....
-            </h1>
-            <p className="text-sm font-normal text-gray-600 mb-7">
-              Get Started with Appointments....
-            </p>
-            {step === 1 && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-semibold text-gray-700">
-                        Full Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="John Doe"
-                          {...field}
-                          className="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+  <div className="w-full max-w-md p-8 border-2 space-y-25 bg-slate-50 rounded-lg shadow-md">
+    <div className="text-center">
+      <h1 className="text-3xl font-extrabold tracking-tight lg:text-1xl mb-4">Get Started With Care Mee</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-10">
+          <h1 className="text-gray-800 font-bold text-2xl mb-1">Hi there, ....</h1>
+          <p className="text-sm font-normal text-gray-600 mb-7">Get Started with Appointments....</p>
+
+          {step === 1 && (
+            <>
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem className="text-left"> 
+                    <FormLabel className="font-semibold text-gray-700">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
+                        className="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="text-left">
                       <FormLabel className="font-semibold text-gray-700">
                         Email
                       </FormLabel>
@@ -204,7 +200,7 @@ export function SignUpForm({ sendData }: any) {
                   control={form.control}
                   name="phone"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="text-left">
                       <FormLabel className="font-semibold text-gray-700">
                         Phone Number
                       </FormLabel>
@@ -306,7 +302,7 @@ export function SignUpForm({ sendData }: any) {
                 <div className="flex flex-1 justify-evenly ">
                   <FormField
                     control={form.control}
-                    name="country"
+                    name = "country"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="font-semibold text-gray-700">
@@ -319,7 +315,7 @@ export function SignUpForm({ sendData }: any) {
                               Country.getCountryByCode(value)?.name;
                             field.onChange(countryName);
                           }}
-                          defaultValue={field.value}
+                          // defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
@@ -520,7 +516,7 @@ export function SignUpForm({ sendData }: any) {
           <div>
             Already have account ?{" "}
             <Link href="/auth/sign-in" className=" text-blue-600 underline">
-              Click Here
+              Click Here  
             </Link>
           </div>
         </Form>

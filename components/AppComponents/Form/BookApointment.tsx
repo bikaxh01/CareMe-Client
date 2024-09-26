@@ -1,11 +1,16 @@
 "use client";
 import React, { useState } from "react";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { BookAppointmentSchema } from "@/config/zodModels";
+import { useToast } from "@/components/ui/use-toast";
+
 import { format } from "date-fns";
 
 import {
@@ -30,12 +35,16 @@ import {
 } from "@/components/ui/popover";
 
 function BookApointment() {
-  const form = useForm();
-  const onSubmit = (data: any) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-  };
+  const form = useForm<z.infer<typeof BookAppointmentSchema>>({
+    resolver: zodResolver(BookAppointmentSchema),
+  });
 
   const [date, setDate] = React.useState<Date>();
+
+
+  function onSubmit(data: any) {
+    console.log("🚀 ~ onSubmit ~ data:",data);
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -48,9 +57,9 @@ function BookApointment() {
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-4">
               <FormField
                 control={form.control}
-                name="specialization"
+                name="specialist"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="text-left">
                     <FormLabel>Select Specialist</FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -62,11 +71,15 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Docter">
+                        <SelectItem value="specialist">
                           Anesthesiologists
                         </SelectItem>
-                        <SelectItem value="Docter">Cardiologists</SelectItem>
-                        <SelectItem value="Docter">Dermatologists</SelectItem>
+                        <SelectItem value="specialist1">
+                          Cardiologists
+                        </SelectItem>
+                        <SelectItem value="specialist2">
+                          Dermatologists
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -76,9 +89,9 @@ function BookApointment() {
 
               <FormField
                 control={form.control}
-                name="doctor"
+                name="selecDoctor"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="text-left">
                     <FormLabel>Select Doctor</FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -90,11 +103,11 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Doctor">
+                        <SelectItem value="doctor">
                           Burminda Burkumar
                         </SelectItem>
-                        <SelectItem value="Doctor"> Ram lala </SelectItem>
-                        <SelectItem value="Doctor"> Shib guiggar </SelectItem>
+                        <SelectItem value="doctor2"> Ram lala </SelectItem>
+                        <SelectItem value="doctor3"> Shib guiggar </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -136,7 +149,7 @@ function BookApointment() {
                 </div>
                 <FormField
                   control={form.control}
-                  name="gender"
+                  name="time"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Select Time</FormLabel>
@@ -151,8 +164,8 @@ function BookApointment() {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="Time"> Moring</SelectItem>
-                          <SelectItem value="Time"> Night </SelectItem>
-                          <SelectItem value="Time">Evening</SelectItem>
+                          <SelectItem value="Time1"> Night </SelectItem>
+                          <SelectItem value="Time2">Evening</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -164,6 +177,7 @@ function BookApointment() {
               <div>
                 <div>
                   <label
+                    className="text-left"
                     htmlFor="story"
                     style={{ marginBottom: "10px", display: "block" }}
                   >

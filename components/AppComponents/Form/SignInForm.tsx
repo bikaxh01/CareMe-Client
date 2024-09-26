@@ -81,7 +81,7 @@ const handleFormSubmit= ()=>{
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="text-left">
                   <FormLabel className="font-semibold text-gray-700">
                     Email
                   </FormLabel>
@@ -102,7 +102,7 @@ const handleFormSubmit= ()=>{
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="text-left">
                     <FormLabel className="font-semibold text-gray-700">
                       Password
                     </FormLabel>

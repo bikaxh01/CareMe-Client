@@ -1,3 +1,4 @@
+import { Description } from "@radix-ui/react-toast";
 import { z } from "zod";
 
 export const SignUpFormSchema = z.object({
@@ -17,9 +18,9 @@ export const SignUpFormSchema = z.object({
   gender: z.string({
     message: "Please select gender",
   }),
-  country: z.string(),
-  state: z.string(),
-  city: z.string(),
+  country: z.string().optional(),
+  state: z.string().optional(),
+  city: z.string().optional(),
   documentNumber: z.string({ message: "Document ID is required" }),
   confirmPassword: z
     .string()
@@ -36,4 +37,13 @@ export const SignInFormSchema = z.object({
   password: z.string().min(6, {
     message: "Username must be at least 6 characters.",
   }),
+});
+
+export const BookAppointmentSchema = z.object({
+  specialist:z.string().min(2,{message:"this field is required"}),
+  selecDoctor:z.string().min(2,{message:"this field is required"}),
+  date: z.string().min(2,{message:"this field is required"}),
+  time: z.string().min(2,{message:"this field is required"}),
+  description: z.string().optional(),
+  story: z.string().min(2,{message:"this field is required"}),  
 });
