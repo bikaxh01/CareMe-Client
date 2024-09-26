@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -8,12 +7,10 @@ import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { Label } from "@/components/ui/label";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,7 +31,9 @@ import {
 
 function BookApointment() {
   const form = useForm();
-  const onSubmit = () => {};
+  const onSubmit = (data: any) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
+  };
 
   const [date, setDate] = React.useState<Date>();
 
@@ -49,12 +48,10 @@ function BookApointment() {
             <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-4">
               <FormField
                 control={form.control}
-                name="gender"
+                name="specialization"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel >
-                      Select Specialist
-                    </FormLabel>
+                    <FormLabel>Select Specialist</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -79,12 +76,10 @@ function BookApointment() {
 
               <FormField
                 control={form.control}
-                name="gender"
+                name="doctor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel >
-                      Select Doctor
-                    </FormLabel>
+                    <FormLabel>Select Doctor</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -110,11 +105,13 @@ function BookApointment() {
               <div className="flex ">
                 <div className="mt-2">
                   <Popover>
-                    <FormLabel  style={{ marginBottom: "10px", display: "block" }}>
+                    <FormLabel
+                      style={{ marginBottom: "10px", display: "block" }}
+                    >
                       Select Date for Checkup
                     </FormLabel>
 
-                    <PopoverTrigger asChild>  
+                    <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
@@ -142,9 +139,7 @@ function BookApointment() {
                   name="gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel >
-                        Select Time
-                      </FormLabel>
+                      <FormLabel>Select Time</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -166,33 +161,32 @@ function BookApointment() {
                 />
               </div>
 
-              <div >
-                <div  >
-                <label htmlFor="story" style={{ marginBottom: "10px", display: "block" }} >Description: </label>
+              <div>
+                <div>
+                  <label
+                    htmlFor="story"
+                    style={{ marginBottom: "10px", display: "block" }}
+                  >
+                    Description:{" "}
+                  </label>
                 </div>
-                
-            
+
                 <textarea
-               
-                style={{
-                  borderColor: 'dark', 
-                  borderWidth: 1,
-                  borderStyle: 'solid',
-                  borderRadius: 4,
-                  padding: 10,
-                  backgroundColor: 'blue-',
-                }}
-                
+                  style={{
+                    borderColor: "dark",
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    borderRadius: 4,
+                    padding: 10,
+                    backgroundColor: "blue-",
+                  }}
                   id="story"
                   name="story"
                   placeholder="write here ..."
                   rows={5}
                   cols={33}
-                >
-                   
-                </textarea>
-               
-                </div>
+                ></textarea>
+              </div>
 
               <div className="flex justify-between">
                 <button

@@ -19,7 +19,7 @@ const Navbar = () => {
         <Button onClick={()=>{
           router.push('/book-appointment')
         }}>Book Appointment</Button>
-      <ModeToggle/>
+      {/* <ModeToggle/> */}
       </div>
     </nav>
   );
