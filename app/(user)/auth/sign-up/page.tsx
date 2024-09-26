@@ -7,32 +7,24 @@ import { APIBaseUrl } from "@/config/EnvConfig";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import VerificationForm from "@/components/AppComponents/Form/verificationForm";
+import { useRouter } from "next/navigation";
 
 function SignUp() {
-  const [formData, setFormData] = useState<any>();
-  const [signUpCompleted, setSignUpCompleted] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
   const { toast } = useToast();
-  const handleSubmit = (data: z.infer<typeof SignUpFormSchema>) => {
-    submitForm(data);
-    setFormData(data);
-  };
 
-  const submitForm = async (data: any) => {
+  const router = useRouter();
+  const handleSubmit = async (data: z.infer<typeof SignUpFormSchema>) => {
     if (data) {
-      console.log("🚀 ~ submitForm ~ data:", data);
-
       try {
         const response = await axios.post(
-          `${APIBaseUrl}/user//auth/register-user`,
+          `${APIBaseUrl}/user/auth/register-user`,
           data
         );
-        setUserEmail(response.data.data.email);
         toast({
           title: `${response.data.message}`,
           variant: "default",
         });
-        setSignUpCompleted(true);
+        router.push(`/verify-user?email=${response.data.data.email}`);
       } catch (error) {
         //@ts-ignore
         console.log(error.status);
@@ -50,11 +42,7 @@ function SignUp() {
 
   return (
     <div>
-      {signUpCompleted ? (
-        <VerificationForm email={userEmail} isUserCreated={signUpCompleted} />
-      ) : (
-        <SignUpForm sendData={handleSubmit} />
-      )}
+      <SignUpForm handleSubmit={handleSubmit} />
     </div>
   );
 }

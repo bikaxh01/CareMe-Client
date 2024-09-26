@@ -10,12 +10,13 @@ export async function middleware(request: NextRequest) {
     token &&
     (url.pathname.startsWith("/auth/sign-in") ||
       url.pathname.startsWith("/auth/sign-up") ||
+      url.pathname.startsWith("/verify-user") ||
       url.pathname === "/")
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (!token && url.pathname.startsWith("/dashboard")) {
+  if (!token && url.pathname.startsWith("/dashboard") ) {
     return NextResponse.redirect(new URL("/auth/sign-in", request.url));
   }
 

@@ -1,11 +1,11 @@
-import BookApointment from '@/components/AppComponents/Form/BookApointment'
+import BookAppointment from '@/components/AppComponents/Form/BookApointment'
 import React from 'react'
 
 
 function Page() {
   return (
     <div>
-        <BookApointment/>
+        <BookAppointment/>
         
     </div>
   )

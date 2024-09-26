@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import { z } from "zod";
+import React, { useEffect, useState } from "react";
+import { date, z } from "zod";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -33,17 +34,71 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import axios from "axios";
+import { APIBaseUrl } from "@/config/EnvConfig";
+import { AnyMxRecord } from "dns";
+import { extractDate } from "@/config/dateExtract";
 
-function BookApointment() {
+function BookAppointment() {
+  const [specialization, setSpecialization] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [availableTimes,setAvailableTimes] = useState([])
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedSpecialist, setSelectedSpecialist] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   const form = useForm<z.infer<typeof BookAppointmentSchema>>({
     resolver: zodResolver(BookAppointmentSchema),
   });
 
-  const [date, setDate] = React.useState<Date>();
 
+  useEffect(()=>{
+     const getTime = async ()=>{
+      if(selectedDate){
+        try {
+          const response = await axios.post(`${APIBaseUrl}/user/getAppointmentTime`,{
+            date:selectedDate
+          })
+          setAvailableTimes(response.data.data)
+        } catch (error) {
+          console.log("🚀 ~ getTime ~ error:", error)
+          
+        }
+      }
+     }
+     getTime()
+  },[selectedDate])
+
+  useEffect(() => {
+    const getSpecialization = async () => {
+      try {
+        const response = await axios.get(
+          `${APIBaseUrl}/doctors/specialization`
+        );
+        setSpecialization(response.data.data);
+      } catch (error) {}
+    };
+    getSpecialization();
+  }, []);
+
+  useEffect(() => {
+    const getDoctor = async () => {
+      if (selectedSpecialist) {
+        try {
+          const response = await axios.get(
+            `${APIBaseUrl}/doctors/get-specialist-doctors?specializationID=${selectedSpecialist}`
+          );
+          setDoctors(response.data.data);
+        } catch (error) {
+          console.log("🚀 ~ getDoctor ~ error:", error);
+        }
+      }
+    };
+    getDoctor()
+  }, [selectedSpecialist]);
 
   function onSubmit(data: any) {
-    console.log("🚀 ~ onSubmit ~ data:",data);
+    console.log("🚀 ~ onSubmit ~ data:", data);
   }
 
   return (
@@ -62,7 +117,10 @@ function BookApointment() {
                   <FormItem className="text-left">
                     <FormLabel>Select Specialist</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(e) => {
+                        field.onChange(e);
+                        setSelectedSpecialist(e);
+                      }}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -71,15 +129,11 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="specialist">
-                          Anesthesiologists
-                        </SelectItem>
-                        <SelectItem value="specialist1">
-                          Cardiologists
-                        </SelectItem>
-                        <SelectItem value="specialist2">
-                          Dermatologists
-                        </SelectItem>
+                        {specialization.map((item: any) => (
+                          <SelectItem value={item.id}>
+                            {item.specialization}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -89,7 +143,7 @@ function BookApointment() {
 
               <FormField
                 control={form.control}
-                name="selecDoctor"
+                name="doctor"
                 render={({ field }) => (
                   <FormItem className="text-left">
                     <FormLabel>Select Doctor</FormLabel>
@@ -103,11 +157,13 @@ function BookApointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="doctor">
-                          Burminda Burkumar
-                        </SelectItem>
-                        <SelectItem value="doctor2"> Ram lala </SelectItem>
-                        <SelectItem value="doctor3"> Shib guiggar </SelectItem>
+                        {
+                          doctors.map((doctor:any)=>(
+                            <SelectItem value={doctor.id}>
+                            {doctor.fullName}
+                          </SelectItem>
+                          ))
+                        }
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -115,38 +171,57 @@ function BookApointment() {
                 )}
               />
 
-              <div className="flex ">
-                <div className="mt-2">
-                  <Popover>
-                    <FormLabel
-                      style={{ marginBottom: "10px", display: "block" }}
-                    >
-                      Select Date for Checkup
-                    </FormLabel>
-
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[250px] justify-start text-left font-normal",
-                          !date && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-1 h-4 w-4 gap-2" />
-                        {date ? format(date, "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
+              <div className="flex gap-6 ">
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel className="font-semibold text-gray-700">
+                        Select Date
+                      </FormLabel>
+                      <Popover open={isOpen} onOpenChange={setIsOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full font-normal text-gray-700 border-gray-300 rounded-md",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                `${format(field.value, "PPP")}`
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto p-0 bg-white shadow-lg rounded-lg"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            captionLayout="dropdown"
+                            selected={field.value}
+                            onSelect={(selectedDate) => {
+                              field.onChange(selectedDate);
+                              const date = extractDate(selectedDate) 
+                              setSelectedDate(date)
+                            }}
+                            onDayClick={() => setIsOpen(false)}
+                            fromYear={2000}
+                            toYear={new Date().getFullYear()}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="time"
@@ -163,9 +238,12 @@ function BookApointment() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Time"> Moring</SelectItem>
-                          <SelectItem value="Time1"> Night </SelectItem>
-                          <SelectItem value="Time2">Evening</SelectItem>
+                        {
+                          availableTimes.map((item:any)=>(
+                            <SelectItem value={item}>{item}</SelectItem>
+                          ))
+                        }
+                          
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -173,41 +251,30 @@ function BookApointment() {
                   )}
                 />
               </div>
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="text-left">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us a little bit about yourself"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
 
-              <div>
-                <div>
-                  <label
-                    className="text-left"
-                    htmlFor="story"
-                    style={{ marginBottom: "10px", display: "block" }}
-                  >
-                    Description:{" "}
-                  </label>
-                </div>
-
-                <textarea
-                  style={{
-                    borderColor: "dark",
-                    borderWidth: 1,
-                    borderStyle: "solid",
-                    borderRadius: 4,
-                    padding: 10,
-                    backgroundColor: "blue-",
-                  }}
-                  id="story"
-                  name="story"
-                  placeholder="write here ..."
-                  rows={5}
-                  cols={33}
-                ></textarea>
-              </div>
-
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="flex justify-between">
                 <button
                   type="submit"
                   className="block bg-green-600 mt-4 py-2 px-4 rounded-2xl text-white font-semibold mb-2"
                 >
-                  Book Now
+                  Submit
                 </button>
               </div>
             </form>
@@ -219,4 +286,4 @@ function BookApointment() {
   );
 }
 
-export default BookApointment;
+export default BookAppointment;
