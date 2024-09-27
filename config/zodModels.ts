@@ -41,7 +41,7 @@ export const SignInFormSchema = z.object({
 
 export const BookAppointmentSchema = z.object({
   specialist:z.string().min(2,{message:"this field is required"}),
-  doctor:z.string().min(2,{message:"this field is required"}),
+  doctorId:z.string().min(2,{message:"this field is required"}),
   date: z.date({
     required_error: " is required!.",
   }),

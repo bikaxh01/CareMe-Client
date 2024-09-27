@@ -13,7 +13,7 @@ import { BookAppointmentSchema } from "@/config/zodModels";
 import { useToast } from "@/components/ui/use-toast";
 
 import { format } from "date-fns";
-
+import { useSession } from "next-auth/react";
 import {
   Form,
   FormControl,
@@ -34,40 +34,45 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { APIBaseUrl } from "@/config/EnvConfig";
 import { AnyMxRecord } from "dns";
 import { extractDate } from "@/config/dateExtract";
+import { toast } from "sonner";
+import { ApiResponse } from "@/config/ApiResponse";
+import { useRouter } from "next/navigation";
 
 function BookAppointment() {
   const [specialization, setSpecialization] = useState([]);
   const [doctors, setDoctors] = useState([]);
-  const [availableTimes,setAvailableTimes] = useState([])
-  const [selectedDate, setSelectedDate] = useState('');
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
   const [selectedSpecialist, setSelectedSpecialist] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
+  const { data: session, status } = useSession();
+  const route= useRouter()
   const form = useForm<z.infer<typeof BookAppointmentSchema>>({
     resolver: zodResolver(BookAppointmentSchema),
   });
 
-
-  useEffect(()=>{
-     const getTime = async ()=>{
-      if(selectedDate){
+  useEffect(() => {
+    const getTime = async () => {
+      if (selectedDate) {
         try {
-          const response = await axios.post(`${APIBaseUrl}/user/getAppointmentTime`,{
-            date:selectedDate
-          })
-          setAvailableTimes(response.data.data)
+          const response = await axios.post(
+            `${APIBaseUrl}/user/getAppointmentTime`,
+            {
+              date: selectedDate,
+            }
+          );
+          setAvailableTimes(response.data.data);
         } catch (error) {
-          console.log("🚀 ~ getTime ~ error:", error)
-          
+          console.log("🚀 ~ getTime ~ error:", error);
         }
       }
-     }
-     getTime()
-  },[selectedDate])
+    };
+    getTime();
+  }, [selectedDate]);
 
   useEffect(() => {
     const getSpecialization = async () => {
@@ -94,11 +99,24 @@ function BookAppointment() {
         }
       }
     };
-    getDoctor()
+    getDoctor();
   }, [selectedSpecialist]);
 
-  function onSubmit(data: any) {
-    console.log("🚀 ~ onSubmit ~ data:", data);
+  async function onSubmit(data: any) {
+    if (data) {
+      try {
+        const response = await axios.post(
+          `${APIBaseUrl}/user/create-appointment`,
+          //@ts-ignore
+          { ...data, patientID: session?.id,startTime:data.time,date:extractDate(data.date) }
+        );
+        toast.success(response.data.message);
+        route.push('/dashboard')
+      } catch (error) {
+        const axiosError = error as AxiosError<ApiResponse>;
+        toast.error(axiosError.response?.data.message);
+      }
+    }
   }
 
   return (
@@ -143,7 +161,7 @@ function BookAppointment() {
 
               <FormField
                 control={form.control}
-                name="doctor"
+                name="doctorId"
                 render={({ field }) => (
                   <FormItem className="text-left">
                     <FormLabel>Select Doctor</FormLabel>
@@ -157,13 +175,11 @@ function BookAppointment() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {
-                          doctors.map((doctor:any)=>(
-                            <SelectItem value={doctor.id}>
+                        {doctors.map((doctor: any) => (
+                          <SelectItem value={doctor.id}>
                             {doctor.fullName}
                           </SelectItem>
-                          ))
-                        }
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -209,8 +225,8 @@ function BookAppointment() {
                             selected={field.value}
                             onSelect={(selectedDate) => {
                               field.onChange(selectedDate);
-                              const date = extractDate(selectedDate) 
-                              setSelectedDate(date)
+                              const date = extractDate(selectedDate);
+                              setSelectedDate(date);
                             }}
                             onDayClick={() => setIsOpen(false)}
                             fromYear={2000}
@@ -238,12 +254,9 @@ function BookAppointment() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                        {
-                          availableTimes.map((item:any)=>(
+                          {availableTimes.map((item: any) => (
                             <SelectItem value={item}>{item}</SelectItem>
-                          ))
-                        }
-                          
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/AppComponents/themeProvider";
 import { ModeToggle } from "@/components/AppComponents/ThemeToggler";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster, toast } from 'sonner'
 
 import AuthProvider from "@/context/AuthProvider";
 
@@ -29,8 +29,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster richColors/>
             {children}
-            <Toaster />
+           
           </ThemeProvider>
         </AuthProvider>
       </body>
